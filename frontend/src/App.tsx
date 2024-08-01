@@ -1,13 +1,12 @@
-import { Outlet } from 'react-router-dom';
-import { Navbar } from './components';
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
+import { theme } from './theme';
+import { Router } from './Router';
 
-const App = () => {
+export default function App() {
   return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
+    <MantineProvider theme={theme}>
+      <Router />
+    </MantineProvider>
   );
-};
-
-export default App;
+}
