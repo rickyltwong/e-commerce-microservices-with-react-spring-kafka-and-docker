@@ -9,7 +9,7 @@ import {
   Box,
   UnstyledButton,
 } from '@mantine/core';
-import { IconPlus, IconMinus } from '@tabler/icons-react';
+import { IconPlus, IconMinus, IconTrash } from '@tabler/icons-react';
 
 interface Product {
   product_id: string;
@@ -107,6 +107,22 @@ export default function Cart(): React.JSX.Element {
     );
   };
 
+  const handleDelete = (productId: string) => {
+    const updatedCartItems = cartItems.filter(
+      (item) => item.product.product_id !== productId
+    );
+    setCartItems(updatedCartItems);
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(
+        updatedCartItems.map((item) => ({
+          product_id: item.product.product_id,
+          quantity: item.quantity,
+        }))
+      )
+    );
+  };
+
   const handleCheckout = () => {
     // Implement checkout functionality
     console.log('Checkout clicked');
@@ -133,7 +149,7 @@ export default function Cart(): React.JSX.Element {
                 alt={product.name}
               />
             </Grid.Col>
-            <Grid.Col span={4}>
+            <Grid.Col span={3}>
               <Text fw={500}>{product.name}</Text>
               <Text size="sm" c="dimmed">
                 {product.description}
@@ -144,7 +160,7 @@ export default function Cart(): React.JSX.Element {
                 ${product.price.toFixed(2)}
               </Text>
             </Grid.Col>
-            <Grid.Col span={2}>
+            <Grid.Col span={3}>
               <Group>
                 <UnstyledButton
                   onClick={() => handleQuantityChange(product.product_id, -1)}>
@@ -156,6 +172,11 @@ export default function Cart(): React.JSX.Element {
                   <IconPlus size={16} />
                 </UnstyledButton>
               </Group>
+            </Grid.Col>
+            <Grid.Col span={2}>
+              <UnstyledButton onClick={() => handleDelete(product.product_id)}>
+                <IconTrash size={20} color="red" />
+              </UnstyledButton>
             </Grid.Col>
           </Grid>
         </Box>

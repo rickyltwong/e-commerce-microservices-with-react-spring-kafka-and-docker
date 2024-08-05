@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid, Card, Image, Text, Group } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { QuantitySelector } from '../components';
 
 import { Product } from '../types';
@@ -76,6 +77,13 @@ export default function HomePage() {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    notifications.show({
+      title: 'Success',
+      message: `${quantity} ${product.name} added to cart`,
+      color: 'blue',
+    });
+    console.log('cart', cart);
   };
 
   return (
