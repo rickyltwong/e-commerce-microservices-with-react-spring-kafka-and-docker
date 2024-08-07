@@ -30,4 +30,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
+    @PrePersist
+    public void prePersist() {
+        this.orderDate = new Timestamp(System.currentTimeMillis());
+    }
 }

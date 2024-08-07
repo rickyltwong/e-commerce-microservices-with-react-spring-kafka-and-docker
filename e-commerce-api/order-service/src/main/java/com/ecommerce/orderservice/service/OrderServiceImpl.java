@@ -19,7 +19,6 @@ public class OrderServiceImpl {
     }
 
     public Order createOrder(Order order) {
-        order.setOrderDate(new Timestamp(System.currentTimeMillis()));
         return orderRepository.save(order);
     }
 

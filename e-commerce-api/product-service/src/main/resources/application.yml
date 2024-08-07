@@ -1,0 +1,12 @@
+spring.application.name: product-service
+spring.kafka.bootstrap-servers: host.docker.internal:9092
+
+spring:
+  cloud:
+    stream:
+      function:
+        definition: orderConsumer
+      bindings:
+        orderConsumer-in-0:
+          destination: orders
+          group: products-group

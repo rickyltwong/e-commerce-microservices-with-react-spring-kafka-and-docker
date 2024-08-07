@@ -4,23 +4,22 @@ spring:
       order-service
 
   datasource:
-    url:
-        jdbc:postgresql://localhost:5432/ecommerce
+    url: jdbc:postgresql://postgres:5432/device_db
     username: root
     password: root
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
-#  cloud:
-#    stream:
-#      kafka:
-#        binder:
-#          brokers: localhost:9092
-#      bindings:
-#        output:
-#          destination: order-topic
-#        input:
-#          destination: order-topic
+  cloud:
+    stream:
+      bindings:
+        order-out-0:
+          destination: orders
+
+  kafka:
+    bootstrap-servers: "kafka:9092"
