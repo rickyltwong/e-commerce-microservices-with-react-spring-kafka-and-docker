@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: image-service
+
+
+minio:
+  url: http://localhost:9001
+  access-key: quUaFX4EelejzQQhfOhB
+  secret-key: DyQj0qyAIniaRKnyVJ4DoEpz2HuY4GGgeuxAyRCL
+  bucket-name: products
+
+
+server:
+  port: 8082

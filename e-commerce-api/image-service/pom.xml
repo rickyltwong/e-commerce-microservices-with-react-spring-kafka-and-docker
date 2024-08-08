@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ecommerce</groupId>
     <artifactId>image-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>image-service</name>
     <description>image-service</description>
     <url/>
@@ -85,6 +85,28 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <to>
+                        <image>eam-project/${project.name}:${project.version}</image>
+                    </to>
+                    <!--                    <container>-->
+                    <!--                        <jvmFlags>-->
+                    <!--                            <jvmFlag>-Dspring.profiles.active=prod</jvmFlag>-->
+                    <!--                        </jvmFlags>-->
+                    <!--                    </container>-->
+                </configuration>
+                <!--                <executions>-->
+                <!--                    <execution>-->
+                <!--                        <goals>-->
+                <!--                            <goal>dockerBuild</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
             </plugin>
         </plugins>
     </build>
