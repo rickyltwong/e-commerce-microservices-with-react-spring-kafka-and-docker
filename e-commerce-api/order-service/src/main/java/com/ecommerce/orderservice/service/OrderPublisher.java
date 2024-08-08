@@ -1,11 +1,9 @@
 package com.ecommerce.orderservice.service;
 
-import org.slf4j.*;
-import com.ecommerce.orderservice.model.Order;
+import com.ecommerce.orderservice.model.OrderMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +16,8 @@ public class OrderPublisher {
         this.streamBridge = streamBridge;
     }
 
-    public void publishOrder(Order order) {
-        System.out.println("Publish Order triggered");
-        Message<Order> message = MessageBuilder.withPayload(order).build();
-        streamBridge.send("order-out-0", message);
+    public void publishOrder(OrderMessage orderMessage) {
+        System.out.println("Publishing order message.............");
+        streamBridge.send("producer-out-0", orderMessage);
     }
 }

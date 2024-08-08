@@ -16,10 +16,14 @@ spring:
     show-sql: true
 
   cloud:
+    function:
+      definition: producer;consumer
     stream:
+      kafka:
+        binder:
+          brokers: 'broker:29092'
       bindings:
-        order-out-0:
-          destination: orders
-
-  kafka:
-    bootstrap-servers: "kafka:9092"
+        producer-out-0:
+          destination: first-topic
+        consumer-in-0:
+          destination: first-topic
