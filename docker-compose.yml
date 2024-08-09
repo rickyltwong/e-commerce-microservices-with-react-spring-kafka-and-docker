@@ -75,7 +75,6 @@ services:
           - kafka-ui
 
   order-service:
-#    build: ./e-commerce-api/order-service
     image: eam-project/order-service:1.0.0
     container_name: order-service
 #    environment:
@@ -94,7 +93,6 @@ services:
           - order-service
 
   # product-service:
-  #   build: ./e-commerce-api/produce-service
   #   container_name: product-service
   #   environment:
   #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
@@ -108,7 +106,6 @@ services:
   #     - eam-network
 
   # admin-service:
-  #   build: ./e-commerce-api/admin-service
   #   container_name: admin-service
   #   environment:
   #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
@@ -122,7 +119,6 @@ services:
   #     - eam-network
 
   # image-service:
-  #   build: ./e-commerce-api/image-service
   #   container_name: image-service
   #   volumes:
   #     - ./assets:/app/images
@@ -138,7 +134,6 @@ services:
   #     - eam-network
 
   # gateway-service:
-  #   build: ./e-commerce-api/gateway-service
   #   container_name: gateway-service
   #   ports:
   #     - '8080:8080'

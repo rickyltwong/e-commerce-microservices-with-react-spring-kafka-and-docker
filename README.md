@@ -4,30 +4,34 @@ By [Kajanan Sivarajah](https://github.com/kajanan16), [Ricky Wong](https://githu
 
 ## Description
 
-This project is a full stack e-commerce application built with React, Spring Boot, Apache Kafka, and Docker. The application is divided into multiple microservices, each responsible for a specific part of the application. The microservices communicate with each other using Kafka. The application allows users to browse products, add products to the cart, and place orders. The application also includes a Kafka producer that sends messages to Kafka topics, and a Kafka consumer that listens for messages on Kafka topics.
+This project is a full stack e-commerce application built with React, Spring Boot, Apache Kafka, and Docker. 
+The application is divided into multiple microservices, each responsible for a specific part of the application. 
+The microservices communicate with each other using Open Feign client and Kafka. 
+The application allows users to browse products, add products to the cart, and place orders. 
+The application also includes a Kafka producer that sends messages to Kafka topics, and 
+a Kafka consumer that listens for messages on Kafka topics.
 
 ## Project Structure
+```
+e-commerce-microservices-with-react-spring-kafka-and-docker
+├── e-commerce-api
+│   ├── order-service
+│   ├── product-service
+│   ├── admin-service
+│   ├── image-service
+│   ├── gateway-service
+│   ├── eureka-service
+├── frontend
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── src
+│   └── public
+├── init.sh
+├── seed.sql
+├── docker-compose.yml
+└── README.md
 
-    project dir
-    ├── /backend
-    │   ├── /OrderService (sub-module)
-    │   ├── /ProductService (sub-module)
-    │   ├── /AdminService (sub-module)
-    │   ├── /ImageService (sub-module)
-    │   ├── /GatewayService (sub-module)
-    │   ├── /EurekaService (sub-module)
-    │   ├── /KafkaConfig (sub-module)
-    │   └── pom.xml
-    ├── /frontend
-    │   ├── Dockerfile
-    │   ├── package.json
-    │   ├── src
-    │   └── public
-    ├── init.sh
-    ├── seed.sql
-    ├── docker-compose.yml
-    ├── README.md
-    └── Final_Documentation.docx
+ ```
 
 ## Technologies
 
