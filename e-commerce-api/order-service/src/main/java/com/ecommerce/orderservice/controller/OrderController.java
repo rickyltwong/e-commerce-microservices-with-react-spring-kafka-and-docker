@@ -1,5 +1,6 @@
 package com.ecommerce.orderservice.controller;
 
+import com.ecommerce.orderservice.dto.OrderRequest;
 import com.ecommerce.orderservice.model.Order;
 import com.ecommerce.orderservice.model.OrderMessage;
 import com.ecommerce.orderservice.service.OrderPublisher;
@@ -9,10 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -36,19 +37,18 @@ public class OrderController {
 
     @GetMapping("/kafka-test")
     public String kafkaTest() {
-        System.out.println("Hello from kafka-test");
         Order testOrder = new Order();
         testOrder.setOrderId(UUID.randomUUID());
         testOrder.setTotalAmount(BigDecimal.valueOf(100));
         testOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
-        orderPublisher.publishOrder(new OrderMessage(testOrder.getOrderId().toString(), "Order created"));
-        return "Hello from kafka-test";
+        orderPublisher.testPublishOrder(new OrderMessage(testOrder.getOrderId().toString(), "Order created from kafka-test"));
+        return "Kafka test successful!";
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
-        orderPublisher.publishOrder(new OrderMessage(createdOrder.getOrderId().toString(), "Order created"));
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
+        Order createdOrder = orderService.placeOrder(orderRequest.getOrderItems());
+        orderPublisher.publishOrder(createdOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
@@ -56,5 +56,11 @@ public class OrderController {
     public ResponseEntity<Order> getOrderById(@PathVariable UUID orderId) {
         Order order = orderService.getOrderById(orderId);
         return ResponseEntity.ok(order);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
 }

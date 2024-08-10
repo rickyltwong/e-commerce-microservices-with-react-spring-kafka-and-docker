@@ -2,32 +2,45 @@
 
 By [Kajanan Sivarajah](https://github.com/kajanan16), [Ricky Wong](https://github.com/rickyltwong)
 
+## Table of Contents
+
+- [Description](#description)
+- [Project Structure](#project-structure)
+- [Technologies](#technologies)
+- [Database Schema](#database-schema)
+- [Features](#features)
+- [How to Run](#how-to-run)
+
 ## Description
 
-This project is a full stack e-commerce application built with React, Spring Boot, Apache Kafka, and Docker. The application is divided into multiple microservices, each responsible for a specific part of the application. The microservices communicate with each other using Kafka. The application allows users to browse products, add products to the cart, and place orders. The application also includes a Kafka producer that sends messages to Kafka topics, and a Kafka consumer that listens for messages on Kafka topics.
+This project is a full stack e-commerce application built with React, Spring Boot, Apache Kafka, and Docker. 
+The application is divided into multiple microservices, each responsible for a specific part of the application. 
+The microservices communicate with each other using Open Feign client and Kafka. 
+The application allows users to browse products, add products to the cart, and place orders.
+The application uses Spring Cloud Stream to handle messaging with Kafka. 
+It leverages StreamBridge to send messages to Kafka topics and listens for messages on Kafka topics using Spring Cloud Stream's messaging model.
 
 ## Project Structure
+```
+e-commerce-microservices-with-react-spring-kafka-and-docker
+├── e-commerce-api
+│   ├── order-service
+│   ├── product-service
+│   ├── admin-service
+│   ├── image-service
+│   ├── gateway-service
+│   ├── eureka-service
+├── frontend
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── src
+│   └── public
+├── init.sh
+├── seed.sql
+├── docker-compose.yml
+└── README.md
 
-    project dir
-    ├── /backend
-    │   ├── /OrderService (sub-module)
-    │   ├── /ProductService (sub-module)
-    │   ├── /AdminService (sub-module)
-    │   ├── /ImageService (sub-module)
-    │   ├── /GatewayService (sub-module)
-    │   ├── /EurekaService (sub-module)
-    │   ├── /KafkaConfig (sub-module)
-    │   └── pom.xml
-    ├── /frontend
-    │   ├── Dockerfile
-    │   ├── package.json
-    │   ├── src
-    │   └── public
-    ├── init.sh
-    ├── seed.sql
-    ├── docker-compose.yml
-    ├── README.md
-    └── Final_Documentation.docx
+ ```
 
 ## Technologies
 
@@ -37,36 +50,45 @@ This project is a full stack e-commerce application built with React, Spring Boo
 - Docker
 - PostgreSQL
 
-## Features
+## Database Schema
 
-- Browse products
-- Add products to the cart
-- Place orders
-- Kafka producer
-- Kafka consumer
-- Microservices architecture
-- Docker containers
-- RESTful APIs
+### Products
 
-## How to Run
+| Column Name  | Data Type | Constraints                         |
+| ------------ | --------- | ----------------------------------- |
+| product_id   | UUID      | PRIMARY KEY                         |
+| name         | TEXT      | NOT NULL                            |
+| description  | TEXT      |                                     |
+| price        | DECIMAL   | NOT NULL                            |
+| category     | TEXT      |                                     |
+| created_at   | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP           |
+| updated_at   | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP           |
+| image_path   | TEXT      |                                     |
 
-1. Clone the repository:
+### Inventory
 
-   ```bash
-   git clone
-   ```
+| Column Name  | Data Type | Constraints                         |
+| ------------ | --------- | ----------------------------------- |
+| inventory_id | UUID      | PRIMARY KEY                         |
+| product_id   | UUID      | FOREIGN KEY REFERENCES Products     |
+| quantity     | INTEGER   | NOT NULL                            |
+| last_updated | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP           |
 
-2. Navigate to the project directory:
+### Orders
 
-   ```bash
-   cd e-commerce-microservices-with-react-spring-kafka-and-docker
-   ```
+| Column Name  | Data Type | Constraints                         |
+| ------------ | --------- | ----------------------------------- |
+| order_id     | UUID      | PRIMARY KEY                         |
+| order_date   | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP           |
+| total_amount | DECIMAL   | NOT NULL                            |
 
-3. Run the following command to start the application:
+### Order_Items
 
-   ```bash
-   chmod +x init.sh
-   ./init.sh
-   ```
+| Column Name  | Data Type | Constraints                         |
+| ------------ | --------- | ----------------------------------- |
+| order_item_id| UUID      | PRIMARY KEY                         |
+| order_id     | UUID      | FOREIGN KEY REFERENCES Orders       |
+| product_id   | UUID      | FOREIGN KEY REFERENCES Products     |
+| quantity     | INTEGER   | NOT NULL                            |
 
-4. Access the application at [http://localhost:3000](http://localhost:3000)
+
