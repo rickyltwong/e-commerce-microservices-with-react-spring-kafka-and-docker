@@ -4,11 +4,11 @@ spring:
 
 
 minio:
-  url: http://localhost:9001
+  url: http://localhost:9000
   access-key: quUaFX4EelejzQQhfOhB
   secret-key: DyQj0qyAIniaRKnyVJ4DoEpz2HuY4GGgeuxAyRCL
   bucket-name: products
 
 
 server:
-  port: 8082
+  port: 8084

@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: device_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
@@ -22,7 +22,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - postgres
     networks:
@@ -30,27 +30,30 @@ services:
 
   minio:
     image: quay.io/minio/minio:latest
+    hostname: minio
     container_name: minio
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     volumes:
       - ~/minio/data:/data
     command: server /data --console-address ":9001"
     networks:
-      - eam-network
+      eam-network:
+        aliases:
+          - minio
 
   broker:
     image: confluentinc/confluent-local:7.4.1
     hostname: broker
     container_name: broker
     ports:
-      - "8082:8082"
-      - "9092:9092"
-      - "9101:9101"
+      - '8082:8082'
+      - '9092:9092'
+      - '9101:9101'
     environment:
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
@@ -75,17 +78,17 @@ services:
           - kafka-ui
 
   order-service:
-#    build: ./e-commerce-api/order-service
+    #    build: ./e-commerce-api/order-service
     image: eam-project/order-service:1.0.0
     container_name: order-service
-#    environment:
-#       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-#       - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    #    environment:
+    #       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+    #       - EUREKA_INSTANCE_PREFERIPADDRESS=true
     ports:
       - '8081:8080'
     depends_on:
       - postgres
-#      - eureka-service
+      #      - eureka-service
       - broker
       - kafka-ui
     networks:

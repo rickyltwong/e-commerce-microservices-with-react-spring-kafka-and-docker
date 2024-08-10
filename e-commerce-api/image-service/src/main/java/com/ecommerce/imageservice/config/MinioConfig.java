@@ -20,7 +20,7 @@ public class MinioConfig {
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
-                .endpoint(minioUrl)
+                .endpoint(minioUrl) // Make sure this matches your MinIO server's endpoint and port
                 .credentials(accessKey, secretKey)
                 .build();
     }
