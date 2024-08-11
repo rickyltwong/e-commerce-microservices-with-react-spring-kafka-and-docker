@@ -36,5 +36,6 @@ info:
     name: "image-service"
     description: "image Service Application"
     version: "1.0.0"
+
 server:
   port: 0

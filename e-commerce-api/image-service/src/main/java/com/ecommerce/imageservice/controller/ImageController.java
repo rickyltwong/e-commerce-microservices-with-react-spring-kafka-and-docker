@@ -1,7 +1,9 @@
 package com.ecommerce.imageservice.controller;
 
 import com.ecommerce.imageservice.service.ImageService;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +29,38 @@ public class ImageController {
     }
 
     @GetMapping("/{fileName}")
-    public ResponseEntity<InputStream> downloadImage(@PathVariable String fileName) {
-        InputStream inputStream = imageService.downloadImage(fileName);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(inputStream);
+    public ResponseEntity<InputStreamResource> downloadImage(@PathVariable String fileName) {
+        try {
+            InputStream imageStream = imageService.downloadImage(fileName);
+
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+            MediaType mediaType = getMediaTypeForFileName(fileExtension);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .contentType(mediaType)
+                    .body(new InputStreamResource(imageStream));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
+
+    private MediaType getMediaTypeForFileName(String fileExtension) {
+        switch (fileExtension.toLowerCase()) {
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            default:
+                return MediaType.APPLICATION_OCTET_STREAM;
+        }
+    }
+
 
     @DeleteMapping("/{fileName}")
     public ResponseEntity<Void> deleteImage(@PathVariable String fileName) {
