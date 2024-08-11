@@ -2,12 +2,14 @@ package com.ecommerce.productservice.listner;
 
 import com.ecommerce.productservice.dto.OrderRequestDTO;
 import com.ecommerce.productservice.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
-@Component
+@Service
+@Slf4j
 public class OrderListener {
 
     private final ProductService productService;
@@ -17,10 +19,11 @@ public class OrderListener {
     }
 
     @Bean
-    public Consumer<OrderRequestDTO> processOrderRequest() {
-        return orderRequest -> {
-            // Process the order request
-            System.out.println(orderRequest.toString());
+    Function<OrderRequestDTO, Boolean> processOrderRequest() {
+        return (OrderRequestDTO orderRequestDTO) -> {
+            log.info("Receiving Order{}", orderRequestDTO.toString());
+            productService.placeOrder(orderRequestDTO);
+            return true;
         };
     }
 }

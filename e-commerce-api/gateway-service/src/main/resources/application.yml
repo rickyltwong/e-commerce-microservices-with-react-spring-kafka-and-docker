@@ -27,7 +27,7 @@ eureka:
     register-with-eureka: true
     region: default
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
     registry-fetch-interval-seconds: 5
 
 management:
@@ -43,9 +43,24 @@ management:
       enabled: true
     circuitBreakers:
       enabled: true
-    circuitbreakerevents:
-      enabled: true
 
   info:
     env:
       enabled: true
+
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**

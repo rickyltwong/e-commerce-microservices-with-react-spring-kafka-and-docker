@@ -1,5 +1,6 @@
 package com.ecommerce.productservice.service;
 
+import com.ecommerce.productservice.dto.OrderRequestDTO;
 import com.ecommerce.productservice.dto.ProductDTO;
 import com.ecommerce.productservice.entity.Products;
 
@@ -19,4 +20,7 @@ public interface ProductService {
     Products save(Products products);
 
     void deleteById(UUID id);
+
+    void placeOrder(OrderRequestDTO orderRequestDTO);
+
 }

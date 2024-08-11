@@ -1,14 +1,40 @@
 spring:
   application:
     name: image-service
-
-
 minio:
-  url: http://localhost:9000
+  url: http://minio:9000
   access-key: quUaFX4EelejzQQhfOhB
   secret-key: DyQj0qyAIniaRKnyVJ4DoEpz2HuY4GGgeuxAyRCL
   bucket-name: products
 
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: image-service:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    region: default
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+    registry-fetch-interval-seconds: 5
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, shutdown
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "image-service"
+    description: "image Service Application"
+    version: "1.0.0"
 server:
-  port: 8084
+  port: 0

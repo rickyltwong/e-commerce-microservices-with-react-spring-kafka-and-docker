@@ -1,10 +1,9 @@
 spring:
   application:
-    name:
-      order-service
+    name: order-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/device_db
+    url: jdbc:postgresql://postgres:5432/device_db
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
@@ -16,8 +15,8 @@ spring:
     show-sql: true
 
   cloud:
-    #    function:
-    #      definition: producer;consumer
+    function:
+      definition: orderResponse
     stream:
       kafka:
         binder:
@@ -26,3 +25,42 @@ spring:
         orderPlaced-out-0:
           destination: order-placed-topic
           contentType: application/json
+
+
+product:
+  service:
+    name : product-service
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: order-service:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    region: default
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+    registry-fetch-interval-seconds: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, shutdown
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "order-service"
+    description: "Rrder Service Application"
+    version: "1.0.0"
+
+server:
+  port: 0

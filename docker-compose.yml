@@ -3,17 +3,20 @@ version: '3'
 services:
   postgres:
     image: postgres:latest
+    hostname: postgres
     container_name: postgres
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: device_db
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
-      - eam-network
+      eam-network:
+        aliases:
+          - postgres
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -22,7 +25,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - '5050:80'
+      - "5050:80"
     depends_on:
       - postgres
     networks:
@@ -35,8 +38,8 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - ~/minio/data:/data
     command: server /data --console-address ":9001"
@@ -48,9 +51,9 @@ services:
     hostname: broker
     container_name: broker
     ports:
-      - '8082:8082'
-      - '9092:9092'
-      - '9101:9101'
+      - "8082:8082"
+      - "9092:9092"
+      - "9101:9101"
     environment:
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
@@ -77,14 +80,14 @@ services:
   order-service:
     image: eam-project/order-service:1.0.0
     container_name: order-service
-    #    environment:
-    #       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-    #       - EUREKA_INSTANCE_PREFERIPADDRESS=true
-    ports:
-      - '8081:8080'
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    # ports:
+    #   - '8081:8080'
     depends_on:
       - postgres
-      #      - eureka-service
+      - eureka-service
       - broker
       - kafka-ui
     networks:
@@ -92,18 +95,23 @@ services:
         aliases:
           - order-service
 
-  # product-service:
-  #   container_name: product-service
-  #   environment:
-  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-  #     - EUREKA_INSTANCE_PREFERIPADDRESS=true
-  #     - KAFKA_BROKER=kafka:9092
-  #   depends_on:
-  #     - postgres
-  #     - eureka-service
-  #     - kafka
-  #   networks:
-  #     - eam-network
+  product-service:
+    image: eam-project/product-service:1.0.0
+    hostname: product-service
+    container_name: product-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    #   - KAFKA_BROKER=kafka:9092
+    depends_on:
+      - postgres
+      - eureka-service
+      - broker
+      - kafka-ui
+    networks:
+      eam-network:
+        aliases:
+          - product-service
 
   # admin-service:
   #   container_name: admin-service
@@ -118,43 +126,51 @@ services:
   #   networks:
   #     - eam-network
 
-  # image-service:
-  #   container_name: image-service
-  #   volumes:
-  #     - ./assets:/app/images
-  #   environment:
-  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-  #     - EUREKA_INSTANCE_PREFERIPADDRESS=true
-  #     - KAFKA_BROKER=kafka:9092
-  #   depends_on:
-  #     - postgres
-  #     - eureka-service
-  #     - kafka
-  #   networks:
-  #     - eam-network
+  image-service:
+    image: eam-project/image-service:1.0.0
+    hostname: image-service
+    container_name: image-service
+    volumes:
+      - ./assets:/app/images
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    #   - KAFKA_BROKER=kafka:9092
+    depends_on:
+      - postgres
+      - eureka-service
+      - broker
+    networks:
+      - eam-network
 
-  # gateway-service:
-  #   container_name: gateway-service
-  #   ports:
-  #     - '8080:8080'
-  #   environment:
-  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-  #     - EUREKA_INSTANCE_PREFERIPADDRESS=true
-  #   depends_on:
-  #     - order-service
-  #     - product-service
-  #     - admin-service
-  #     - image-service
-  #   networks:
-  #     - eam-network
+  gateway-service:
+    image: eam-project/gateway-service:1.0.0
+    container_name: gateway-service
+    ports:
+      - '8080:8080'
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    depends_on:
+      - order-service
+      - product-service
+      # - admin-service
+      - image-service
+    networks:
+      eam-network:
+        aliases:
+          - gateway-service
 
-  # eureka-service:
-  #   build: ./e-commerce-api/eureka-service
-  #   container_name: eureka-service
-  #   ports:
-  #     - '8761:8761'
-  #   networks:
-  #     - eam-network
+  eureka-service:
+    image: eam-project/eureka-service:1.0.0
+    hostname: eureka-service
+    container_name: eureka-service
+    ports:
+      - '8761:8761'
+    networks:
+      eam-network:
+        aliases:
+          - eureka-service
 
 #  frontend:
 #    build: ./frontend
@@ -168,7 +184,7 @@ services:
 
 networks:
   eam-network:
-    driver: host
+    driver: bridge
 
 volumes:
   minio-data:
