@@ -146,6 +146,7 @@ services:
   gateway-service:
     image: eam-project/gateway-service:1.0.0
     container_name: gateway-service
+    hostname: gateway-service
     ports:
       - '8080:8080'
     environment:

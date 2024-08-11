@@ -55,12 +55,3 @@ management:
         locator:
           enabled: false
           lower-case-service-id: true
-      routes:
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/api/products/**
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/api/orders/**
