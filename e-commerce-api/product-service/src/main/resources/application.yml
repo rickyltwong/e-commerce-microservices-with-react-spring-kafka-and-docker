@@ -6,9 +6,60 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+      ddl-auto: none
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+      format_sql: true
+      naming:
+        physical-strategy: com.ecommerce.productservice.config.CamelCaseToUppercaseTablesNamingStrategy
+
+
 
   application:
     name: product-service
+
+
+  cloud:
+    function:
+      definition: processOrderRequest
+    stream:
+      kafka:
+        binder:
+          brokers: 'broker:29092'
+      bindings:
+        processOrderRequest-in-0:
+          destination: order-placed-topic
+          contentType: application/json
+#          group: order-received-group
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: product-service:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    region: default
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+    registry-fetch-interval-seconds: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, shutdown
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+
+info:
+  app:
+    name: "product-service"
+    description: "product Service Application"
+    version: "1.0.0"

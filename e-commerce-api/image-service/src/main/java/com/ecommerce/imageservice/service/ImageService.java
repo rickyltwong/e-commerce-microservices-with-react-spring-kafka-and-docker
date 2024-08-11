@@ -1,7 +1,6 @@
 package com.ecommerce.imageservice.service;
 
 import io.minio.*;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,36 +18,31 @@ public class ImageService {
     @Value("${minio.bucket-name}")
     private String bucketName;
 
-    @PostConstruct
-    public void init() {
-        try {
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("products").build());
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket("products").build());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error initializing MinIO bucket", e);
-        }
-    }
-
 
     public String uploadImage(MultipartFile file) {
         try {
-            String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
+
+            String contentType = file.getContentType();
+
+            System.out.println("Uploading file with content type: " + contentType);
+
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
                             .object(fileName)
                             .stream(inputStream, file.getSize(), -1)
-                            .contentType(file.getContentType())
+                            .contentType(contentType)
                             .build()
             );
+
             return fileName;
         } catch (Exception e) {
             throw new RuntimeException("Error uploading file to MinIO", e);
         }
     }
+
 
     public InputStream downloadImage(String fileName) {
         try {

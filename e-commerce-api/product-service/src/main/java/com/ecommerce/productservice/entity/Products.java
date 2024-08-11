@@ -1,8 +1,11 @@
 package com.ecommerce.productservice.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -11,11 +14,12 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "Products")
-public class Product {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Products {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "product_id", updatable = false, nullable = false)
     private UUID productId;
 
@@ -31,12 +35,15 @@ public class Product {
     @Column(name = "category")
     private String category;
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
     @Column(name = "image_path")
     private String imagePath;
+
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ecommerce</groupId>
     <artifactId>eureka-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>eureka-service</name>
     <description>eureka-service</description>
     <url/>
@@ -56,6 +56,40 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <to>
+                        <image>eam-project/${project.name}:${project.version}</image>
+                    </to>
+                    <!--                    <container>-->
+                    <!--                        <jvmFlags>-->
+                    <!--                            <jvmFlag>-Dspring.profiles.active=prod</jvmFlag>-->
+                    <!--                        </jvmFlags>-->
+                    <!--                    </container>-->
+                </configuration>
+                <!--                <executions>-->
+                <!--                    <execution>-->
+                <!--                        <goals>-->
+                <!--                            <goal>dockerBuild</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
