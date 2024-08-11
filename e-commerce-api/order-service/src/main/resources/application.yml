@@ -29,7 +29,7 @@ spring:
 
 product:
   service:
-    name : product-service
+    url : http://gateway-service:8080/api/products
 
 
 eureka:
