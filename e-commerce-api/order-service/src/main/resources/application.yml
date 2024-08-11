@@ -4,7 +4,7 @@ spring:
       order-service
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/device_db
+    url: jdbc:postgresql://localhost:5432/device_db
     username: root
     password: root
     driver-class-name: org.postgresql.Driver

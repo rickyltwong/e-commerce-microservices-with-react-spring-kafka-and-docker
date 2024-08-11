@@ -1,14 +1,22 @@
 package com.ecommerce.productservice.service;
 
-import com.ecommerce.productservice.entity.Product;
+import com.ecommerce.productservice.dto.ProductDTO;
+import com.ecommerce.productservice.entity.Products;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductService {
-        List<Product> findAll();
-        Optional<Product> findById(UUID id);
-        Product save(Product product);
-        void deleteById(UUID id);
+    List<ProductDTO> findAllProductsWithQuantity();
+
+    Optional<ProductDTO> findProductByIdWithQuantity(UUID id);
+
+    List<Products> findAll();
+
+    Optional<Products> findById(UUID id);
+
+    Products save(Products products);
+
+    void deleteById(UUID id);
 }
