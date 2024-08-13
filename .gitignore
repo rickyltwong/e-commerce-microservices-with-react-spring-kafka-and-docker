@@ -1,2 +1,9 @@
-.idea
-node_modules
+.idea/
+node_modules/
+target/
+
+*.log
+*.class
+*.jar
+*.war
+*.ear

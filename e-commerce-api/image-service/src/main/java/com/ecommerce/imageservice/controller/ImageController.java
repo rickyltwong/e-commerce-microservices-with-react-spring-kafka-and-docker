@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping("/images")
 public class ImageController {
 
 
@@ -20,6 +20,12 @@ public class ImageController {
 
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        return "Image service /api/images/test";
     }
 
     @PostMapping

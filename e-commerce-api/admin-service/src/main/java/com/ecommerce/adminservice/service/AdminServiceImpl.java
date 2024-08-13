@@ -4,6 +4,7 @@ import com.ecommerce.adminservice.client.InventoryClient;
 import com.ecommerce.adminservice.client.ProductClient;
 import com.ecommerce.adminservice.dto.InventoryDTO;
 import com.ecommerce.adminservice.dto.ProductDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class AdminServiceImpl implements AdminService {
     private final ProductClient productClient;
     private final InventoryClient inventoryClient;
 
+    @Autowired
     public AdminServiceImpl(ProductClient productClient, InventoryClient inventoryClient) {
         this.productClient = productClient;
         this.inventoryClient = inventoryClient;

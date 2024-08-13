@@ -34,14 +34,17 @@ public class GatewayConfig {
     public GlobalFilter customGlobalFilter() {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            String requestMethod = request.getMethod().name();
-            String requestPath = request.getPath().toString();
-            System.out.println("Incoming request " + requestMethod + " " + requestPath);
+            String originalPath = request.getPath().toString();
+            System.out.println("Original incoming request: " + originalPath);
+
             long startTime = System.currentTimeMillis();
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                ServerHttpRequest rewrittenRequest = exchange.getRequest();
+                String rewrittenPath = rewrittenRequest.getPath().toString();
                 ServerHttpResponse response = exchange.getResponse();
                 HttpStatusCode responseStatus = response.getStatusCode();
                 long duration = System.currentTimeMillis() - startTime;
+                System.out.println("Rewritten request: " + rewrittenPath);
                 System.out.println("Outgoing response with status code " + responseStatus + " processed in " + duration + " ms");
             }));
         };
