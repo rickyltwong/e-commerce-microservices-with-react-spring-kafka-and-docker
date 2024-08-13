@@ -1,0 +1,41 @@
+#spring.application.name=admin-service
+#server.port=0
+
+spring:
+  application:
+    name: admin-service
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 0
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: order-service:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    region: default
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+    registry-fetch-interval-seconds: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, shutdown
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "admin-service"
+    description: "Admin Service Application"
+    version: "1.0.0"

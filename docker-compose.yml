@@ -113,18 +113,21 @@ services:
         aliases:
           - product-service
 
-  # admin-service:
-  #   container_name: admin-service
-  #   environment:
-  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
-  #     - EUREKA_INSTANCE_PREFERIPADDRESS=true
-  #     - KAFKA_BROKER=kafka:9092
-  #   depends_on:
-  #     - postgres
-  #     - eureka-service
-  #     - kafka
-  #   networks:
-  #     - eam-network
+  admin-service:
+    image: eam-project/admin-service:1.0.0
+    container_name: admin-service
+    hostname: admin-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+    depends_on:
+      - eureka-service
+      - order-service
+      - product-service
+    networks:
+      eam-network:
+        aliases:
+          - admin-service
 
   image-service:
     image: eam-project/image-service:1.0.0
@@ -141,7 +144,9 @@ services:
       - eureka-service
       - broker
     networks:
-      - eam-network
+      eam-network:
+        aliases:
+          - image-service
 
   gateway-service:
     image: eam-project/gateway-service:1.0.0

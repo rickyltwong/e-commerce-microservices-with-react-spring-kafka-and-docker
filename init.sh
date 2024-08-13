@@ -29,5 +29,10 @@ echo "Building gateway-service..."
 cd "$CURRENT_DIR/e-commerce-api/gateway-service"
 mvn compile jib:dockerBuild
 
+# build the admin-service with jib
+echo "Building admin-service..."
+cd "$CURRENT_DIR/e-commerce-api/admin-service"
+mvn compile jib:dockerBuild
+
 
 docker compose up

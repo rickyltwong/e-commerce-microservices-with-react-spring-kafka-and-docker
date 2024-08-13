@@ -2,11 +2,13 @@ package com.ecommerce.productservice.service;
 
 import com.ecommerce.productservice.entity.Inventory;
 import com.ecommerce.productservice.repository.InventoryRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
 
