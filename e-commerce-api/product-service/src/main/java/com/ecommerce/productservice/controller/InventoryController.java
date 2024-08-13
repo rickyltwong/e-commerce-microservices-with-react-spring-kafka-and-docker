@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RestController
+@RequestMapping("/api/inventory")
 public class InventoryController {
     private final InventoryService inventoryService;
 
