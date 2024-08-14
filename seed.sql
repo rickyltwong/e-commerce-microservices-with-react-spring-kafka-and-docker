@@ -56,12 +56,12 @@ ON UPDATE NO ACTION ON DELETE NO ACTION;
 --
 
 INSERT INTO "Products" (product_id, name, description, price, category, created_at, updated_at, image_path) VALUES
-  (uuid_generate_v4(), 'iPhone 13', 'Latest model iPhone with 5G technology', 999.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/iphone13.jpg'),
-  (uuid_generate_v4(), 'iPhone 12', 'Previous generation iPhone', 799.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/iphone12.jpg'),
-  (uuid_generate_v4(), 'iPhone SE', 'Compact and affordable iPhone', 499.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/iphonese.jpg'),
-  (uuid_generate_v4(), 'iPad Pro', 'High performance tablet', 1099.99, 'Tablet', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/ipadpro.jpg'),
-  (uuid_generate_v4(), 'iPad', 'Lightweight and powerful tablet', 599.99, 'Tablet', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/ipad.jpg'),
-  (uuid_generate_v4(), 'MacBook', 'Lightweight and powerful laptop', 999.99, 'Laptop', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/app/images/macbook.jpg');
+  (uuid_generate_v4(), 'iPhone 13', 'Latest model iPhone with 5G technology', 999.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/iphone13.jpg'),
+  (uuid_generate_v4(), 'iPhone 12', 'Previous generation iPhone', 799.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/iphone12.jpg'),
+  (uuid_generate_v4(), 'iPhone SE', 'Compact and affordable iPhone', 499.99, 'Smartphone', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/iphonese.jpg'),
+  (uuid_generate_v4(), 'iPad Pro', 'High performance tablet', 1099.99, 'Tablet', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/ipadpro.jpg'),
+  (uuid_generate_v4(), 'iPad', 'Lightweight and powerful tablet', 599.99, 'Tablet', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/ipad.jpg'),
+  (uuid_generate_v4(), 'MacBook', 'Lightweight and powerful laptop', 999.99, 'Laptop', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '/api/images/macbook.jpg');
 
 INSERT INTO "Inventory" (inventory_id, product_id, quantity, last_updated) VALUES
   (uuid_generate_v4(), (SELECT product_id FROM "Products" WHERE name = 'iPhone 13'), 100, CURRENT_TIMESTAMP),

@@ -1,79 +1,48 @@
-import { useEffect, useState } from 'react';
-import { Container, Grid, Card, Image, Text, Group } from '@mantine/core';
+import {
+  Container,
+  Grid,
+  Card,
+  Image,
+  Text,
+  Group,
+  Loader,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { QuantitySelector } from '../components';
+import { useQuery } from '@tanstack/react-query';
 
 import { Product } from '../types';
 
-const sampleProductData = JSON.stringify([
-  {
-    product_id: '1',
-    name: 'iPhone 13',
-    description: 'Latest model iPhone with 5G technology',
-    price: 999.99,
-    category: 'Smartphone',
-    image_path: '/app/images/iphone13.jpg',
-  },
-  {
-    product_id: '2',
-    name: 'iPhone 12',
-    description: 'Previous generation iPhone',
-    price: 799.99,
-    category: 'Smartphone',
-    image_path: '/app/images/iphone12.jpg',
-  },
-  {
-    product_id: '3',
-    name: 'iPhone SE',
-    description: 'Compact and affordable iPhone',
-    price: 499.99,
-    category: 'Smartphone',
-    image_path: '/app/images/iphonese.jpg',
-  },
-  {
-    product_id: '4',
-    name: 'iPad Pro',
-    description: 'High performance tablet',
-    price: 1099.99,
-    category: 'Tablet',
-    image_path: '/app/images/ipadpro.jpg',
-  },
-  {
-    product_id: '5',
-    name: 'iPad',
-    description: 'Lightweight and powerful tablet',
-    price: 599.99,
-    category: 'Tablet',
-    image_path: '/app/images/ipad.jpg',
-  },
-  {
-    product_id: '6',
-    name: 'MacBook',
-    description: 'Lightweight and powerful laptop',
-    price: 999.99,
-    category: 'Laptop',
-    image_path: '/app/images/macbook.jpg',
-  },
-]);
+import { baseURL } from '../lib/api';
+
+const fetchProducts = async (): Promise<Product[]> => {
+  const response = await fetch(`${baseURL}/api/products`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    const parsedData: Product[] = JSON.parse(sampleProductData);
-    setProducts(parsedData);
-  }, []);
+  const {
+    data: products = [],
+    isError,
+    isLoading,
+  } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+  });
 
   const handleAddToCart = (product: Product, quantity: number) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existingProductIndex = cart.findIndex(
-      (item: { product_id: string }) => item.product_id === product.product_id
+      (item: { productId: string }) => item.productId === product.productId
     );
 
     if (existingProductIndex !== -1) {
       cart[existingProductIndex].quantity += quantity;
     } else {
-      cart.push({ product_id: product.product_id, quantity });
+      cart.push({ productId: product.productId, quantity });
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -86,17 +55,49 @@ export default function HomePage() {
     console.log('cart', cart);
   };
 
+  if (isLoading) {
+    return (
+      <Loader
+        size="xl"
+        style={{
+          width: '100%',
+          height: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      />
+    );
+  }
+
+  if (isError) {
+    return (
+      <Text
+        style={{
+          width: '100%',
+          height: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        Error loading products
+      </Text>
+    );
+  }
+
   return (
     <Container>
       <Grid>
         {products.map((product) => (
-          <Grid.Col key={product.product_id} span={4}>
-            <Card shadow="sm" p="lg">
+          <Grid.Col key={product.productId} span={4}>
+            <Card shadow="lg" p="lg" withBorder>
               <Card.Section>
                 <Image
-                  src={product.image_path}
-                  height={160}
+                  src={product.imagePath}
+                  height={200}
+                  w="auto"
                   alt={product.name}
+                  fallbackSrc="https://multimedia.bbycastatic.ca/multimedia/products/500x500/164/16472/16472785.jpg"
                 />
               </Card.Section>
 

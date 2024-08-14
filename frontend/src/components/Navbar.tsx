@@ -18,9 +18,9 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure(false);
   const location = useLocation();
 
-  const items = links.map((link) => (
+  const items = links.map((link, index) => (
     <Anchor
-      key={link.label}
+      key={index}
       href={link.link}
       className={classes.link}
       data-active={location.pathname === link.link ? 'true' : undefined}>

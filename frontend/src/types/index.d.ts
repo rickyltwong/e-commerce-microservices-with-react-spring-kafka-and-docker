@@ -1,8 +1,22 @@
 export interface Product {
-  product_id: string;
+  productId: string;
   name: string;
   description: string;
   price: number;
   category: string;
-  image_path: string;
+  imagePath: string;
+  quantity: number;
+}
+
+export interface Transaction {
+  orderId: string;
+  orderDate: string;
+  totalAmount: number;
+  orderItems: OrderItem[];
+}
+
+export interface OrderItem {
+  orderItemId: string;
+  productId: string;
+  quantity: number;
 }
