@@ -1,14 +1,16 @@
 package com.ecommerce.productservice.service;
 
+import com.ecommerce.productservice.client.ImageClient;
 import com.ecommerce.productservice.dto.OrderRequestDTO;
 import com.ecommerce.productservice.dto.ProductDTO;
 import com.ecommerce.productservice.entity.Inventory;
-import com.ecommerce.productservice.entity.Products;
+import com.ecommerce.productservice.entity.Product;
 import com.ecommerce.productservice.repository.InventoryRepository;
 import com.ecommerce.productservice.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,10 +24,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final InventoryRepository inventoryRepository;
 
+    private final ImageClient imageClient;
+
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, InventoryRepository inventoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, InventoryRepository inventoryRepository, ImageClient imageClient) {
         this.productRepository = productRepository;
         this.inventoryRepository = inventoryRepository;
+        this.imageClient = imageClient;
     }
 
     @Override
@@ -39,22 +44,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Products> findAll() {
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 
     @Override
-    public Optional<Products> findById(UUID id) {
+    public Optional<Product> findById(UUID id) {
         return productRepository.findById(id);
     }
 
     @Override
-    public Products save(Products products) {
-        return productRepository.save(products);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
     public void deleteById(UUID id) {
+        Optional<Inventory> product = inventoryRepository.findByProductId(id);
+        product.ifPresent(inventoryRepository::delete);
         productRepository.deleteById(id);
     }
 
@@ -77,10 +84,23 @@ public class ProductServiceImpl implements ProductService {
             inventory.setQuantity(inventory.getQuantity() - orderedQuantity);
             inventoryRepository.save(inventory);
 
-            Products product = productRepository.findById(productId)
+            Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new IllegalArgumentException("Product not found"));
             product.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             productRepository.save(product);
         }
+    }
+
+    @Override
+    public Product updateImage(MultipartFile file, UUID id) {
+        Product product = null;
+        Optional<Product> productRes = productRepository.findById(id);
+        if (productRes.isPresent()) {
+            product = productRes.get();
+            String imagePath = imageClient.uploadImage(file).getBody();
+            product.setImagePath("/api/images/" + imagePath);
+            product = productRepository.save(product);
+        }
+        return product;
     }
 }

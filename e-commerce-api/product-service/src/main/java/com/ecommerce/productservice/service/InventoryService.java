@@ -16,4 +16,6 @@ public interface InventoryService {
     Inventory updateInventory(UUID inventoryId, Inventory inventoryDetails);
 
     void deleteInventory(UUID inventoryId);
+
+
 }

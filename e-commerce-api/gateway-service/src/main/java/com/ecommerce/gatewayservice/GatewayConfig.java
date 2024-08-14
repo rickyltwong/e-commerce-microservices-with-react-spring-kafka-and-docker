@@ -15,6 +15,18 @@ public class GatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+                .route("admin-swagger-ui", r -> r.path("/api/admin/swagger-ui/**")
+                        .filters(f -> f.rewritePath("/api/admin/swagger-ui/(?<remainingPath>.*)", "/swagger-ui/${remainingPath}"))
+                        .uri("lb://admin-service"))
+                .route("admin-swagger-resources", r -> r.path("/api/admin/swagger-resources/**")
+                        .filters(f -> f.rewritePath("/api/admin/swagger-resources/(?<remainingPath>.*)", "/swagger-resources/${remainingPath}"))
+                        .uri("lb://admin-service"))
+                .route("admin-api-docs", r -> r.path("/api/admin/v3/api-docs/**")
+                        .filters(f -> f.rewritePath("/api/admin/v3/api-docs/(?<remainingPath>.*)", "/v3/api-docs/${remainingPath}"))
+                        .uri("lb://admin-service"))
+                .route("admin-api-swagger-index", r -> r.path("/api/admin/swagger-ui.html")
+                        .filters(f -> f.rewritePath("/api/admin/swagger-ui.html", "/swagger-ui.html"))  // Removed extra parenthesis
+                        .uri("lb://admin-service"))
                 .route("products", r -> r.path("/api/products/**")
                         .filters(f -> f.rewritePath("/api/products/(?<remainingPath>.*)", "/api/products/${remainingPath}"))
                         .uri("lb://product-service"))
@@ -29,6 +41,7 @@ public class GatewayConfig {
                         .uri("lb://image-service"))
                 .build();
     }
+
 
     @Bean
     public GlobalFilter customGlobalFilter() {

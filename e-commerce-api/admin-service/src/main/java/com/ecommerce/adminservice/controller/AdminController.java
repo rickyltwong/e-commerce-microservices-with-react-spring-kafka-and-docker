@@ -1,6 +1,7 @@
 package com.ecommerce.adminservice.controller;
 
 import com.ecommerce.adminservice.dto.InventoryDTO;
+import com.ecommerce.adminservice.dto.OrderDTO;
 import com.ecommerce.adminservice.dto.ProductDTO;
 import com.ecommerce.adminservice.service.AdminService;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,11 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/inventory")
+    public ResponseEntity<List<InventoryDTO>> getProductsInventory() {
+        return ResponseEntity.ok(adminService.getInventory());
+    }
+
     @PostMapping("/inventory")
     public ResponseEntity<InventoryDTO> createInventory(@RequestBody InventoryDTO inventory) {
         InventoryDTO createdInventory = adminService.createInventory(inventory);
@@ -59,5 +65,11 @@ public class AdminController {
     public ResponseEntity<Void> deleteInventory(@PathVariable UUID id) {
         adminService.deleteInventory(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = adminService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
 }

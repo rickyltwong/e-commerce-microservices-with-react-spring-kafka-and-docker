@@ -13,6 +13,9 @@ public interface ProductClient {
     @GetMapping("/api/products")
     List<ProductDTO> getProducts();
 
+    @GetMapping("/api/products/{id}")
+    ProductDTO getProductsById(@PathVariable UUID id);
+
     @PostMapping("/api/products")
     ProductDTO createProduct(@RequestBody ProductDTO products);
 

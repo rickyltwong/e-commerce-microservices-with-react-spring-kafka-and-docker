@@ -2,7 +2,8 @@ package com.ecommerce.productservice.service;
 
 import com.ecommerce.productservice.dto.OrderRequestDTO;
 import com.ecommerce.productservice.dto.ProductDTO;
-import com.ecommerce.productservice.entity.Products;
+import com.ecommerce.productservice.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +14,15 @@ public interface ProductService {
 
     Optional<ProductDTO> findProductByIdWithQuantity(UUID id);
 
-    List<Products> findAll();
+    List<Product> findAll();
 
-    Optional<Products> findById(UUID id);
+    Optional<Product> findById(UUID id);
 
-    Products save(Products products);
+    Product save(Product product);
 
     void deleteById(UUID id);
 
     void placeOrder(OrderRequestDTO orderRequestDTO);
 
+    Product updateImage(MultipartFile image, UUID productId);
 }
