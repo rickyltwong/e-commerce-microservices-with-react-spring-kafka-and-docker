@@ -1,6 +1,12 @@
 spring:
   application:
     name: image-service
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 minio:
   url: http://minio:9000
   access-key: minioadmin

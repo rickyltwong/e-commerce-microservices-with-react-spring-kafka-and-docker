@@ -60,6 +60,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(UUID id) {
+        Optional<Inventory> product = inventoryRepository.findByProductId(id);
+        product.ifPresent(inventoryRepository::delete);
         productRepository.deleteById(id);
     }
 

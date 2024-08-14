@@ -30,6 +30,7 @@ public class InventoryController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
     public Inventory createInventory(@RequestBody Inventory inventory) {
         return inventoryService.createInventory(inventory);

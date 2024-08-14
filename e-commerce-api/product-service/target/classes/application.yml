@@ -21,7 +21,7 @@ spring:
 
   cloud:
     function:
-      definition: processOrderRequest
+      definition: processOrderRequest;processDeleteImageRequest
     stream:
       kafka:
         binder:
@@ -30,7 +30,15 @@ spring:
         processOrderRequest-in-0:
           destination: order-placed-topic
           contentType: application/json
-#          group: order-received-group
+        processDeleteImageRequest-in-0:
+          destination: delete-image-topic
+          contentType: application/json
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 
 eureka:
@@ -63,3 +71,4 @@ info:
     name: "product-service"
     description: "product Service Application"
     version: "1.0.0"
+

@@ -7,6 +7,18 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  cloud:
+    function:
+      definition: deleteImg
+    stream:
+      kafka:
+        binder:
+          brokers: 'broker:29092'
+      bindings:
+        deleteProductImage-out-0:
+          destination: delete-image-topic
+          contentType: application/json
+
 server:
   port: 0
 
@@ -39,3 +51,4 @@ info:
     name: "admin-service"
     description: "Admin Service Application"
     version: "1.0.0"
+

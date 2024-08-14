@@ -4,6 +4,7 @@ import com.ecommerce.productservice.dto.ProductDTO;
 import com.ecommerce.productservice.entity.Product;
 import com.ecommerce.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +47,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{id}/image")
+    @PostMapping(value = "/{id}/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> updateProductImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
         Product product = productService.updateImage(file, id);
         if (product != null) {
