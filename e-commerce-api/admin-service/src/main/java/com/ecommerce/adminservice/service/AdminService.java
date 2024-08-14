@@ -3,6 +3,7 @@ package com.ecommerce.adminservice.service;
 import com.ecommerce.adminservice.dto.InventoryDTO;
 import com.ecommerce.adminservice.dto.OrderDTO;
 import com.ecommerce.adminservice.dto.ProductDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public interface AdminService {
     InventoryDTO createInventory(InventoryDTO inventory);
 
     InventoryDTO updateInventory(UUID id, InventoryDTO inventoryDetails);
+
+    void uploadProductImage(UUID id, MultipartFile file);
 
     void deleteInventory(UUID id);
 

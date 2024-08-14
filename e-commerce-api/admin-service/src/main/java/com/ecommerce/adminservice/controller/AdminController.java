@@ -4,8 +4,10 @@ import com.ecommerce.adminservice.dto.InventoryDTO;
 import com.ecommerce.adminservice.dto.OrderDTO;
 import com.ecommerce.adminservice.dto.ProductDTO;
 import com.ecommerce.adminservice.service.AdminService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +32,12 @@ public class AdminController {
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO products) {
         ProductDTO createdProduct = adminService.createProduct(products);
         return ResponseEntity.ok(createdProduct);
+    }
+
+    @PostMapping(value = "/products/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
+        adminService.uploadProductImage(id, file);
+        return ResponseEntity.ok("Product image uploaded successfully");
     }
 
     @PutMapping("/products/{id}")
