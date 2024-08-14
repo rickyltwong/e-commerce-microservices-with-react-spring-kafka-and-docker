@@ -8,6 +8,7 @@ import com.ecommerce.adminservice.dto.OrderDTO;
 import com.ecommerce.adminservice.dto.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,6 +69,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public InventoryDTO updateInventory(UUID id, InventoryDTO inventoryDetails) {
         return inventoryClient.updateInventory(id, inventoryDetails);
+    }
+
+    @Override
+    public void uploadProductImage(UUID id, MultipartFile file) {
+        productClient.updateProductImage(id, file);
     }
 
     @Override
