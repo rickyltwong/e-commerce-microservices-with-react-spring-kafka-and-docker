@@ -85,23 +85,90 @@ All resources are exposed as RESTful APIs.
 ## Backend Features
 
 ### Product Service
+- Manages both product data and inventory records within the e-commerce platform.
+- Provides endpoints for:
+    - **Fetching Products:** Allows retrieving all products or a specific product by ID.
+    - **Managing Products in Admin Service:** Supports creating, updating, and deleting products through the admin service.
+    - **Managing Inventory in Admin Service:** Enables fetching, creating, updating, and deleting inventory records through the admin service.
+- Facilitates smooth management and inter-service communication in the admin service.
+- Receives messages from the order service regarding order requests to manage stock levels.
+- Receives messages from the admin service to handle image deletion requests.
+
+
+#### Endpoints
+
+- **Fetch Products:**  `GET /api/products`
+- **Get Product:**    `GET /api/products/{id}`
+
+#### Product Management in Admin Service
+- **Create Product:** `POST /api/products`
+- **Update Product:** `PUT /api/products/{id}`
+- **Delete Product:** `DELETE /api/products/{id}`
+- **Upload Product Image:** `POST /api/products/{id}/image`
+
+#### Inventory Management in Admin Service
+- **Fetch All Inventories:** `GET /api/inventory`
+- **Get Inventory:** `GET /api/inventory/{id}`
+- **Create Inventory:** `POST /api/inventory`
+- **Update Inventory:** `PUT /api/inventory/{id}`
+- **Delete Inventory:** `DELETE /api/inventory/{id}`
+
 
 ### Image Service
 
 - Uploads images from the filesystem to a MinIO bucket.
 - Serves image data required during product fetch operations.
 
+#### Endpoints
+- **Upload Image:** `POST /api/images`
+- **Get Image:** `GET /api/images/{imgName}`
+- **Delete Image:** `DELETE /api/images/{imgName}`
+
+
 ### Admin Service
 
-#### Admin Operations (via Postman):
+The Admin Service is responsible for managing both product and inventory data within the e-commerce platform. It allows administrators to perform a variety of tasks, including:
+
+#### Endpoints 
+
+#### Product Management:
 - **Create Product:** `POST /api/admin/products/{id}`
+- **Upload Product Image:** `POST /api/admin/products/{id}/image`
 - **Delete Product:** `DELETE /api/admin/products/{id}`
 - **Fetch Products:** `GET /api/admin/products`
 - **Update Product:** `PUT /api/admin/products/{id}`
+
+#### Inventory Management:
 - **Create Inventory:** `POST /api/admin/inventory`
 - **Fetch Inventory:** `GET /api/admin/inventory`
 
+#### Additional Operations:
+- **Fetch Orders:** `GET /api/admin/orders`
+
+This service ensures seamless management of products, inventory, and orders, providing administrators with the necessary tools to oversee the e-commerce platform efficiently.
+
 ### Order Service
+The Order Service is an integral part of the e-commerce platform, responsible for handling all order-related operations. It allows for the management of customer orders through the following key functionalities:
+
+#### Endpoints
+- **Fetch Orders:**  `GET /api/orders`
+- **Get Order:**     `GET /api/orders/{id}`
+- **Create Order:**  `POST /api/orders`
+
+
+### Gateway service
+
+- **Entry Point:** Serves as the main entry point for all microservices.
+- **Load Balancing:** Distributes traffic across service instances to optimize performance.
+- **Request Logging:** Logs incoming requests for monitoring and debugging.
+- **Path Rewriting:** Modifies request paths before routing them to the appropriate microservices.
+
+
+### Eureka Service
+
+- **Service Registration:** Microservices register their location and status.
+- **Service Discovery:** Enables dynamic discovery of registered services.
+
 
 ### Service Interaction
 - **Synchronous Communication:** Implemented using OpenFeign.
@@ -109,15 +176,44 @@ All resources are exposed as RESTful APIs.
 
 #### Open Feign
 
-xxx
+In this project, OpenFeign has been used for synchronous inter-service communication. It facilitates seamless interaction between different services.
 
+In the admin service, OpenFeign is utilized to perform the following operations:
+
+- **Product Management:** OpenFeign calls the product service endpoints to manage product-related data, enabling operations such as:
+    - `POST /api/products` - To create a new product.
+    - `PUT /api/products/{id}` - To update an existing product by its ID.
+    - `DELETE /api/products/{id}` - To delete a product by its ID.
+    - `POST /api/products/{id}/image` - To upload the product image.
+
+- **Inventory Management:** OpenFeign is also used to manage product inventories by interacting with the inventory service endpoints, supporting operations such as:
+    - `GET /api/inventory` - To retrieve a list of all inventory records.
+    - `GET /api/inventory/{id}` - To fetch details of a specific inventory by its ID.
+    - `POST /api/inventory` - To create a new inventory record.
+    - `PUT /api/inventory/{id}` - To update an existing inventory by its ID.
+    - `DELETE /api/inventory/{id}` - To delete an inventory record by its ID.
+
+- **Order Management:** OpenFeign is used in the admin service to manage orders:
+    - `GET /api/orders` - To retrieve a list of all order records.
+
+In the product service, OpenFeign is utilized to perform the following operations:
+- `POST /api/images` - To upload a product image.
+- `DELETE /api/images/{fileName}` - To delete an image.
+
+
+
+
+OpenFeign simplifies the process of making HTTP requests to other services within the system, ensuring reliable and efficient inter service communication.
+ 
 #### Kafka
 
 Kafka is used for asynchronous communication between services. One of the Kafka flows implemented is the **OrderPlacedEvent** topic.
-- When an order is placed, the **OrderService** sends a message to the **OrderPlacedEvent** topic.
+- When an order is placed, the **OrderService** sends a message to the **order-placed-topic** topic.
 - **ProductService** subscribes to this topic, receives the message, and updates the stock level of the product accordingly.
 
 Other kafka flow would be deleteImageEvent:
+- when a admin delete the product, the admin service publish the message to **delete-image-topic** topic.
+- **ProductService** subscribes to the topic, and receives the message then process it and send it call the image service to perform the image deletion operation.
 
 ### Logging
 - Custom filters log the original request, rewritten request, and response.
